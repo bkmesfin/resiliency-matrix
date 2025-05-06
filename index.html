@@ -275,6 +275,31 @@
         return matrixData[keyArea][mop][metricIndex].submetrics;
       };
 
+      // Safely get color properties
+      const getBgColor = (keyArea) => {
+        return keyAreaColors[keyArea] && keyAreaColors[keyArea].bg ? keyAreaColors[keyArea].bg : '#E3F2FD';
+      };
+      
+      const getBorderColor = (keyArea) => {
+        return keyAreaColors[keyArea] && keyAreaColors[keyArea].border ? keyAreaColors[keyArea].border : '#2196F3';
+      };
+      
+      const getTextColor = (keyArea) => {
+        return keyAreaColors[keyArea] && keyAreaColors[keyArea].text ? keyAreaColors[keyArea].text : '#0D47A1';
+      };
+      
+      const getMOPBgColor = (mop) => {
+        return mopColors[mop] && mopColors[mop].bg ? mopColors[mop].bg : '#E1BEE7';
+      };
+      
+      const getMOPBorderColor = (mop) => {
+        return mopColors[mop] && mopColors[mop].border ? mopColors[mop].border : '#8E24AA';
+      };
+      
+      const getMOPTextColor = (mop) => {
+        return mopColors[mop] && mopColors[mop].text ? mopColors[mop].text : '#4A148C';
+      };
+
       // Key area colors
       const keyAreaColors = {
         "Post Data Analysis": { bg: "#E3F2FD", border: "#2196F3", text: "#0D47A1" },
@@ -358,8 +383,8 @@
                       activeKeyArea === keyArea ? 'ring-4 ring-blue-300' : ''
                     }`}
                     style={{
-                      backgroundColor: keyAreaColors[keyArea]?.bg || '#E3F2FD',
-                      borderLeft: `5px solid ${keyAreaColors[keyArea]?.border || '#2196F3'}`,
+                      backgroundColor: getBgColor(keyArea),
+                      borderLeft: `5px solid ${getBorderColor(keyArea)}`,
                     }}
                     onClick={() => {
                       setActiveKeyArea(activeKeyArea === keyArea ? null : keyArea);
@@ -369,7 +394,7 @@
                   >
                     <div 
                       className="font-bold"
-                      style={{ color: keyAreaColors[keyArea]?.text || '#0D47A1' }}
+                      style={{ color: getTextColor(keyArea) }}
                     >
                       {keyArea}
                     </div>
@@ -384,7 +409,7 @@
               {activeKeyArea && (
                 <div className="mt-6">
                   <div className="text-center mb-4">
-                    <h3 className="text-lg font-semibold" style={{ color: keyAreaColors[activeKeyArea]?.text }}>
+                    <h3 className="text-lg font-semibold" style={{ color: getTextColor(activeKeyArea) }}>
                       {activeKeyArea} - MOPs
                     </h3>
                   </div>
@@ -397,8 +422,8 @@
                           activeMOP === mop ? 'ring-4 ring-purple-300' : ''
                         }`}
                         style={{
-                          backgroundColor: mopColors[mop]?.bg || '#E1BEE7',
-                          borderLeft: `5px solid ${mopColors[mop]?.border || '#8E24AA'}`,
+                          backgroundColor: getMOPBgColor(mop),
+                          borderLeft: `5px solid ${getMOPBorderColor(mop)}`,
                         }}
                         onClick={() => {
                           setActiveMOP(activeMOP === mop ? null : mop);
@@ -407,7 +432,7 @@
                       >
                         <div 
                           className="font-bold"
-                          style={{ color: mopColors[mop]?.text || '#4A148C' }}
+                          style={{ color: getMOPTextColor(mop) }}
                         >
                           {mop}
                         </div>
@@ -420,11 +445,12 @@
                 </div>
               )}
               
+              {/* Rest of the component with similar fixes */}
               {/* Metrics Ring - Only visible if a Key Area and MOP are selected */}
               {activeKeyArea && activeMOP && (
                 <div className="mt-6">
                   <div className="text-center mb-4">
-                    <h3 className="text-lg font-semibold" style={{ color: mopColors[activeMOP]?.text }}>
+                    <h3 className="text-lg font-semibold" style={{ color: getMOPTextColor(activeMOP) }}>
                       {activeMOP} - Metrics
                     </h3>
                   </div>
@@ -454,12 +480,13 @@
                 </div>
               )}
               
-              {/* Submetrics/Outputs - Only visible if a Key Area, MOP, and Metric are selected */}
+              {/* Submetrics/Outputs */}
               {activeKeyArea && activeMOP && activeMetric !== null && (
                 <div className="mt-6">
                   <div className="text-center mb-4">
                     <h3 className="text-lg font-semibold text-green-900">
-                      {getMetricsForMOP(activeKeyArea, activeMOP)[activeMetric]?.metric} - Outputs
+                      {getMetricsForMOP(activeKeyArea, activeMOP)[activeMetric] ? 
+                        getMetricsForMOP(activeKeyArea, activeMOP)[activeMetric].metric : ''} - Outputs
                     </h3>
                   </div>
                   
